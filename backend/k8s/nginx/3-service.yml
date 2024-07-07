@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: is210-nginx
+  namespace: is210
+spec:
+  type: LoadBalancer
+  selector:
+    app: is210-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http
+    - protocol: TCP
+      port: 443
+      targetPort: 443
+      name: https
+  loadBalancerIP: 35.240.220.50

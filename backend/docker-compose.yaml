@@ -1,0 +1,32 @@
+version: '3'
+services:
+  is210-db:
+    restart: unless-stopped
+    container_name: is210-db
+    image: ${repository_url}/is210/oracle-db:v1.2.5
+    ports:
+      - '1521:1521'
+  is210-backend:
+    image: ${repository_url}/is210/backend:${SHORT_SHA}
+    hostname: is210-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: is210-backend
+    environment:
+      COMMIT_HASH: ${SHORT_SHA}
+    restart: unless-stopped
+    depends_on:
+      - is210-db
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    container_name: nginx
+    volumes:
+      - ./is210-backend.conf:/etc/nginx/conf.d/is210-backend.conf
+      - ./ssl:/ssl
+    depends_on:
+        - is210-backend
+    restart: unless-stopped

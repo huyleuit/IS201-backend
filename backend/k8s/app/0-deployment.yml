@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: is210-app-deployment
+  namespace: is210
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: is210-app
+  template:
+    metadata:
+      labels:
+        app: is210-app
+    spec:
+      containers:
+        - image: ${REGISTRY_URL}/${PROJECT_NAME}/backend:${commit_hash}
+          name: is210-app
+          env:
+            - name: COMMIT_HASH
+              value: ${commit_hash}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8009
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+              ephemeral-storage: "512Mi"
+

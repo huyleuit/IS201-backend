@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: is210-db-deployment
+  namespace: is210
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      db: is210-db
+  template:
+    metadata:
+      labels:
+        db: is210-db
+    spec:
+      containers:
+        - name: is210-db
+          image: registry-harbor.ngodat0103.me/is210/oracle-db:v1.1.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 1521
+          resources:
+            requests:
+                memory: "4048Mi"
+                cpu: "2000m"
+                ephemeral-storage: "5Gi"

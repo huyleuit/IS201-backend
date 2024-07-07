@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: is210-backend
+  namespace: ${namespace}
+spec:
+  type: ClusterIP
+  selector:
+    app: is210-app
+  ports:
+    - targetPort: 8009
+      protocol: TCP
+      port: 8009

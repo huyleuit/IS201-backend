@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: is210-db
+  namespace: is210
+spec:
+  type: ClusterIP
+  selector:
+    db: is210-db
+  ports:
+    - protocol: TCP
+      port: 1521
+      targetPort: 1521

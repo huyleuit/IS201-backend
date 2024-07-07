@@ -1,0 +1,31 @@
+services:
+  is210-db:
+    restart: unless-stopped
+    container_name: is210-db
+    image: ${repository_url}/is210/oracle-db:v1.2.5
+    networks:
+     mynet:
+       ipv4_address: 192.168.1.140
+
+#    ports:
+#      - '1521:1521'
+  is210-backend:
+    image: ${repository_url}/is210/backend:${SHORT_SHA}
+    hostname: is210-backend
+    networks:
+      mynet:
+        ipv4_address: 192.168.1.141
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: is210-backend
+    environment:
+      COMMIT_HASH: ${SHORT_SHA}
+    restart: unless-stopped
+
+    depends_on:
+      - is210-db
+networks:
+  mynet:
+    name: mypersonalthings_mynet
+    external: true

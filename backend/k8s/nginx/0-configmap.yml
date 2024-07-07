@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+  is210-backend.conf: |-
+    server{
+        listen 80;
+        server_name is210-backend.uitprojects.com is210-backend.local;
+        location / {
+            return 301 http://$host$request_uri;
+        }
+    }
+    server{
+        listen 443 ssl;
+        server_name is210-backend.uitprojects.com is210-backend.local;
+        ssl_certificate /ssl/ca-bundle.pem;
+        ssl_certificate_key /ssl/private-key.pem;
+        location / {
+            proxy_pass http://is210-backend:8009;
+        }
+    }
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: is210

@@ -1,0 +1,22 @@
+services:
+  is210-db:
+    restart: unless-stopped
+    container_name: is210-db
+    image: ngodat0103/oracle-db:v1
+    ports:
+      - '1521:1521'
+  is210-backend:
+    image: ngodat0103/is210-backend:v1
+    hostname: is210-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: is210-backend
+    environment:
+      COMMIT_HASH: ${SHORT_SHA}
+    restart: unless-stopped
+    ports:
+        - '8009:8009'
+    depends_on:
+      - is210-db
+

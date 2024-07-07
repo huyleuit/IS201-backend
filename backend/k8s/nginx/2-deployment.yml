@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: is210
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: is210-nginx
+  template:
+    metadata:
+      labels:
+        app: is210-nginx
+    spec:
+      volumes:
+        - name: configuration
+          configMap:
+            name: nginx-config
+        - name: nginx-secret
+          secret:
+            secretName: nginx-secret
+      containers:
+        - image: nginx
+          name: nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - name: configuration
+              mountPath: /etc/nginx/conf.d/
+              readOnly: true
+            - name: nginx-secret
+              mountPath: /ssl/
+              readOnly: true
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+                cpu: "200m"
+                memory: "128Mi"
+                ephemeral-storage: "512Mi"
